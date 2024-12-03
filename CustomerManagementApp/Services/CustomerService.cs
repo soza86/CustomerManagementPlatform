@@ -18,5 +18,24 @@ namespace CustomerManagementApp.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<ViewCustomerModel>>() ?? new List<ViewCustomerModel>();
         }
+
+        public async Task<ViewCustomerModel?> CreateAsync(CreateCustomerModel customer)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/customer", customer);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ViewCustomerModel>();
+        }
+
+        public async Task<bool> UpdateAsync(Guid id, UpdateCustomerModel customer)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/customer/{id}", customer);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/customer/{id}");
+            return response.IsSuccessStatusCode;
+        }
     }
 }

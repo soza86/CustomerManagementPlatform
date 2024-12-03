@@ -19,7 +19,7 @@ namespace CustomerManagementApp.Components
             return new TableData<ViewCustomerModel>
             {
                 Items = _items,
-                TotalItems = result.TotalItems
+                TotalItems = 100 //TODO
             };
         }
 

@@ -1,7 +1,7 @@
 ﻿@using CustomerManagementApp.Models;
 <h3>Customers</h3>
 
-<MudTable T="ViewCustomerModel" Items="_items" ServerData="GetCustomers" Bordered="true" RowsPerPage="10">
+<MudTable T="ViewCustomerModel" Items="_items" ServerData="GetCustomers" Bordered="true" RowsPerPage="5">
     <HeaderContent>
         <MudTh Sortable="true" DataLabel="CompanyName">Company Name</MudTh>
         <MudTh Sortable="true" DataLabel="ContactName">Contact Name</MudTh>
@@ -22,4 +22,7 @@
         <MudTd DataLabel="Country">@context.Country</MudTd>
         <MudTd DataLabel="Phone">@context.Phone</MudTd>
     </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }" />
+    </PagerContent>
 </MudTable>
