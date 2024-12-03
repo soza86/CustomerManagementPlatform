@@ -50,7 +50,9 @@ namespace CustomerManagementService.BusinessLayer
 
         public async Task<bool> Delete(Guid customerId)
         {
-            return await _customerRepository.DeleteAsync(customerId);
+            var result = await _customerRepository.DeleteAsync(customerId);
+            await _customerRepository.SaveAsync();
+            return result;
         }
     }
 }
