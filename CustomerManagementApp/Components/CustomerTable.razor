@@ -1,0 +1,25 @@
+﻿@using CustomerManagementApp.Models;
+<h3>Customers</h3>
+
+<MudTable T="ViewCustomerModel" Items="_items" ServerData="GetCustomers" Bordered="true" RowsPerPage="10">
+    <HeaderContent>
+        <MudTh Sortable="true" DataLabel="CompanyName">Company Name</MudTh>
+        <MudTh Sortable="true" DataLabel="ContactName">Contact Name</MudTh>
+        <MudTh Sortable="true" DataLabel="Address">Address</MudTh>
+        <MudTh Sortable="true" DataLabel="City">City</MudTh>
+        <MudTh Sortable="true" DataLabel="Region">Region</MudTh>
+        <MudTh Sortable="true" DataLabel="PostalCode">Postal Code</MudTh>
+        <MudTh Sortable="true" DataLabel="Country">Country</MudTh>
+        <MudTh Sortable="true" DataLabel="Phone">Phone</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="CompanyName">@context.CompanyName</MudTd>
+        <MudTd DataLabel="ContactName">@context.ContactName</MudTd>
+        <MudTd DataLabel="Address">@context.Address</MudTd>
+        <MudTd DataLabel="City">@context.City</MudTd>
+        <MudTd DataLabel="Region">@context.Region</MudTd>
+        <MudTd DataLabel="PostalCode">@context.PostalCode</MudTd>
+        <MudTd DataLabel="Country">@context.Country</MudTd>
+        <MudTd DataLabel="Phone">@context.Phone</MudTd>
+    </RowTemplate>
+</MudTable>
