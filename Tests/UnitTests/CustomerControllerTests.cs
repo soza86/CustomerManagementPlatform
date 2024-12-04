@@ -31,10 +31,10 @@ namespace Tests.UnitTests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnValue = Assert.IsType<List<ViewCustomerModel>>(okResult.Value);
-            Assert.Equal(2, returnValue.Count());
-            Assert.Equal("John Doe", returnValue.FirstOrDefault()?.ContactName);
-            Assert.Equal("Region 1", returnValue.FirstOrDefault()?.Region);
+            var returnValue = Assert.IsType<ServiceResponse>(okResult.Value);
+            Assert.Equal(10, returnValue.TotalItems);
+            Assert.Equal("John Doe", returnValue.Customers?.FirstOrDefault()?.ContactName);
+            Assert.Equal("Region 1", returnValue.Customers?.FirstOrDefault()?.Region);
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Tests.UnitTests
             Assert.IsType<NotFoundResult>(result);
         }
 
-        private static IEnumerable<ViewCustomerModel> GenerateCustomersList()
+        private static ServiceResponse GenerateCustomersList()
         {
             IEnumerable<ViewCustomerModel> customersList = new List<ViewCustomerModel>
             {
@@ -145,7 +145,11 @@ namespace Tests.UnitTests
                      PostalCode = "1345"
                 }
             };
-            return customersList;
+            return new ServiceResponse
+            {
+                Customers = customersList,
+                TotalItems = 10
+            };
         }
 
         private static ViewCustomerModel GenerateCustomer()
