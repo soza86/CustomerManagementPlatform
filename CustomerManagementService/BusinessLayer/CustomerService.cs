@@ -18,12 +18,17 @@ namespace CustomerManagementService.BusinessLayer
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ViewCustomerModel>> GetAll(int pageNumber, int pageSize)
+        public async Task<ServiceResponse> GetAll(int pageNumber, int pageSize)
         {
             var skip = (pageNumber - 1) * pageSize;
             var take = pageSize;
             var records = await _customerRepository.GetAsIQueryable().Skip(skip).Take(take).ToListAsync();
-            return _mapper.Map<List<ViewCustomerModel>>(records);
+            var totalCount = await _customerRepository.GetAsIQueryable().CountAsync();
+            return new ServiceResponse
+            {
+                 Customers = _mapper.Map<IEnumerable<ViewCustomerModel>>(records),
+                 TotalItems = totalCount
+            };
         }
 
         public async Task<ViewCustomerModel> GetById(Guid customerId)

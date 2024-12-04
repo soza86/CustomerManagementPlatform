@@ -16,7 +16,7 @@ namespace CustomerManagementService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ViewCustomerModel>>> GetCustomers([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        public async Task<ActionResult<ServiceResponse>> GetCustomers([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             var customers = await _customerService.GetAll(pageNumber, pageSize);
             return Ok(customers);

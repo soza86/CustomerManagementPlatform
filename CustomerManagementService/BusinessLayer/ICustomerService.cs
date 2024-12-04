@@ -4,7 +4,7 @@ namespace CustomerManagementService.BusinessLayer
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<ViewCustomerModel>> GetAll(int pageNumber, int pageSize);
+        Task<ServiceResponse> GetAll(int pageNumber, int pageSize);
 
         Task<ViewCustomerModel> GetById(Guid customerId);
 

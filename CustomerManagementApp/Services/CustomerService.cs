@@ -12,11 +12,11 @@ namespace CustomerManagementApp.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<ViewCustomerModel>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<ServiceResponse> GetAllAsync(int pageNumber, int pageSize)
         {
             var response = await _httpClient.GetAsync($"api/customer?pageNumber={pageNumber}&pageSize={pageSize}");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ViewCustomerModel>>() ?? new List<ViewCustomerModel>();
+            return await response.Content.ReadFromJsonAsync<ServiceResponse>();
         }
 
         public async Task<ViewCustomerModel?> CreateAsync(CreateCustomerModel customer)

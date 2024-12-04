@@ -19,14 +19,14 @@ namespace CustomerManagementApp.Components
             return new TableData<ViewCustomerModel>
             {
                 Items = _items,
-                TotalItems = 100 //TODO
+                TotalItems = result.TotalItems
             };
         }
 
         private async Task<(IEnumerable<ViewCustomerModel> Items, int TotalItems)> FetchDataAsync(int pageNumber, int pageSize)
         {
             var response = await CustomerService.GetAllAsync(pageNumber + 1, pageSize);
-            return (response, response.Count());
+            return (response.Customers, response.TotalItems);
         }
     }
 }
