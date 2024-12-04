@@ -1,0 +1,24 @@
+﻿<MudDialog Class="custom-dialog">
+    <DialogContent>
+        <MudTextField Label="Company Name" @bind-Value="Customer.CompanyName" />
+        <MudTextField Label="Contact Name" @bind-Value="Customer.ContactName" />
+        <MudTextField Label="Address" @bind-Value="Customer.Address" />
+        <MudTextField Label="City" @bind-Value="Customer.City" />
+        <MudTextField Label="Region" @bind-Value="Customer.Region" />
+        <MudTextField Label="Postal Code" @bind-Value="Customer.PostalCode" />
+        <MudTextField Label="Country" @bind-Value="Customer.Country" />
+        <MudTextField Label="Phone" @bind-Value="Customer.Phone" />
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="CloseDialog" Color="Color.Primary">Submit</MudButton>
+        <MudButton OnClick="CancelDialog">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<style>
+    .custom-dialog {
+        width: 800px;
+        max-width: 90%;
+    }
+</style>

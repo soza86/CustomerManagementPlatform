@@ -1,16 +1,16 @@
 ﻿@using CustomerManagementApp.Models;
-<h3>Customers</h3>
 
 <MudTable T="ViewCustomerModel" Items="_items" ServerData="GetCustomers" Bordered="true" RowsPerPage="5">
     <HeaderContent>
-        <MudTh Sortable="true" DataLabel="CompanyName">Company Name</MudTh>
-        <MudTh Sortable="true" DataLabel="ContactName">Contact Name</MudTh>
-        <MudTh Sortable="true" DataLabel="Address">Address</MudTh>
-        <MudTh Sortable="true" DataLabel="City">City</MudTh>
-        <MudTh Sortable="true" DataLabel="Region">Region</MudTh>
-        <MudTh Sortable="true" DataLabel="PostalCode">Postal Code</MudTh>
-        <MudTh Sortable="true" DataLabel="Country">Country</MudTh>
-        <MudTh Sortable="true" DataLabel="Phone">Phone</MudTh>
+        <MudTh DataLabel="CompanyName">Company Name</MudTh>
+        <MudTh DataLabel="ContactName">Contact Name</MudTh>
+        <MudTh DataLabel="Address">Address</MudTh>
+        <MudTh DataLabel="City">City</MudTh>
+        <MudTh DataLabel="Region">Region</MudTh>
+        <MudTh DataLabel="PostalCode">Postal Code</MudTh>
+        <MudTh DataLabel="Country">Country</MudTh>
+        <MudTh DataLabel="Phone">Phone</MudTh>
+        <MudTh DataLabel="Actions">Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="CompanyName">@context.CompanyName</MudTd>
@@ -21,6 +21,10 @@
         <MudTd DataLabel="PostalCode">@context.PostalCode</MudTd>
         <MudTd DataLabel="Country">@context.Country</MudTd>
         <MudTd DataLabel="Phone">@context.Phone</MudTd>
+        <MudTd>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => OpenForm(context)">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => DeleteRecord(context.Id)">Delete</MudButton>
+        </MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }" />

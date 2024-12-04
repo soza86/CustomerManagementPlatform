@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 <div class="page">
+    <MudDialogProvider />
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -7,12 +8,12 @@
     <main>
         <MudThemeProvider />
         <MudPopoverProvider />
+       
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
+        </div>      
         <article class="content px-4">
-            @Body
+            @Body        
         </article>
     </main>
 </div>
