@@ -15,7 +15,6 @@ namespace CustomerManagementApp.Pages
         public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
-
         public ILocalStorageService? LocalStorageService { get; set; }
 
         private MudForm _form;
@@ -34,7 +33,7 @@ namespace CustomerManagementApp.Pages
                 if (!string.IsNullOrEmpty(result))
                 {
                     await LocalStorageService.SetItemAsync("token", result);
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo("/customers", forceLoad: true);
                 }
             }
         }

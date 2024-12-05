@@ -1,19 +1,51 @@
-﻿@inherits LayoutComponentBase
+﻿@using CustomerManagementApp.Pages
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService;
+
 <div class="page">
     <MudDialogProvider />
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <MudThemeProvider />
+    <MudPopoverProvider />
+    @if (IsLoggedIn)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
 
-    <main>
-        <MudThemeProvider />
-        <MudPopoverProvider />
-       
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>      
-        <article class="content px-4">
-            @Body        
-        </article>
-    </main>
+        <main>
+            <div class="top-row px-4">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    }
+    else
+    {
+        <main>
+            <article class="content px-4">
+                <Login></Login>
+            </article>
+        </main>
+    }
 </div>
+
+@code {
+    private bool IsLoggedIn = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await LocalStorageService.GetItemAsync<string>("token");
+        if (!string.IsNullOrEmpty(token))
+        {
+            IsLoggedIn = true;
+            NavigationManager.NavigateTo("/customers");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+}

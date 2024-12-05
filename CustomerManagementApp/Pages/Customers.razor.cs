@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace CustomerManagementApp.Pages
 {
-    public partial class Home
+    public partial class Customers
     {
         [Inject]
         public IDialogService? DialogService { get; set; }
