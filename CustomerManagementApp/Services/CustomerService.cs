@@ -37,5 +37,18 @@ namespace CustomerManagementApp.Services
             var response = await _httpClient.DeleteAsync($"api/customer/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<string> LoginAsync(LoginModel login)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/auth/login", login);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
     }
 }

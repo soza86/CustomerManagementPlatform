@@ -20,7 +20,7 @@ namespace CustomerManagementService.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginModel model) //TODO move to another class
         {
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
@@ -43,7 +43,8 @@ namespace CustomerManagementService.Controllers
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            var result = new JwtSecurityTokenHandler().WriteToken(token);
+            return Ok(result);
         }
     }
 }

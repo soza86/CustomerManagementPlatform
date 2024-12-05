@@ -1,11 +1,13 @@
 ﻿using CustomerManagementService.BusinessLayer;
 using CustomerManagementService.Models.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerManagementService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
