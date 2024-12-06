@@ -1,10 +1,6 @@
-﻿using CustomerManagementService.Models.Resources;
-using Microsoft.AspNetCore.Identity;
+﻿using CustomerManagementService.BusinessLayer;
+using CustomerManagementService.Models.Resources;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace CustomerManagementService.Controllers
 {
@@ -12,38 +8,20 @@ namespace CustomerManagementService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserManagementService _userManagementService;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(IUserManagementService userManagementService)
         {
-            _userManager = userManager;
+            _userManagementService = userManagementService;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginModel model) //TODO move to another class
+        public async Task<ActionResult<string>> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            var result = await _userManagementService.LoginUser(model);
+            if (string.IsNullOrEmpty(result))
                 return Unauthorized();
 
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ABCDEFGHIJLMNOPQRSTUVWXYZAWDRGYJIKLOPLK"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: "JwtAuthApi",
-                audience: "JwtAuthApi",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            var result = new JwtSecurityTokenHandler().WriteToken(token);
             return Ok(result);
         }
     }

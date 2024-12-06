@@ -17,6 +17,7 @@ namespace CustomerManagementService
             builder.Services.AddScoped<DbContext, CustomerContext>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IUserManagementService, UserManagementService>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
