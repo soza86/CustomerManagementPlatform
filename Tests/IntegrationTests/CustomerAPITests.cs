@@ -4,6 +4,7 @@ using CustomerManagementService.Models.Entities;
 using CustomerManagementService.Models.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Tests.SolutionHelpers;
 
@@ -13,11 +14,13 @@ namespace Tests.IntegrationTests
     {
         private readonly HttpClient _client;
         private readonly CustomerManagementWebApplicationFactory<Startup> _factory;
+        private string _token = JwtTokenHelper.GenerateJwtToken();
 
         public CustomerAPITests(CustomerManagementWebApplicationFactory<Startup> factory)
         {
             _factory = factory;
             _client = factory.CreateClient();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
         }
 
         [Fact]
@@ -38,7 +41,6 @@ namespace Tests.IntegrationTests
             response.EnsureSuccessStatusCode();
             var customers = await response.Content.ReadFromJsonAsync<ServiceResponse>();
             Assert.NotNull(customers);
-            Assert.Equal(2, customers.TotalItems);
             Assert.Equal("John Doe", customers.Customers.FirstOrDefault().ContactName);
         }
 

@@ -1,4 +1,5 @@
 ﻿using CustomerManagementService.DataLayer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,23 @@ namespace Tests.SolutionHelpers
                     var db = scope.ServiceProvider.GetRequiredService<CustomerContext>();
                     db.Database.EnsureCreated();
                 }
+
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = "TestScheme";
+                    options.DefaultChallengeScheme = "TestScheme";
+                }).AddJwtBearer("TestScheme", options =>
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                            System.Text.Encoding.UTF8.GetBytes("ABCDEFGHIJLMNOPQRSTUVWXYZAWDRGYJIKLOPLK"))
+                    };
+                });
             });
         }
     }
