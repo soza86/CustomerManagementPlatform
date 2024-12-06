@@ -13,7 +13,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
-
 builder.Services.AddHttpClient<CustomerService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7253/");

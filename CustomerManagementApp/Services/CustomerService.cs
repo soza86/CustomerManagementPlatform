@@ -1,4 +1,7 @@
-﻿using CustomerManagementApp.Models;
+﻿using Blazored.LocalStorage;
+using CustomerManagementApp.Models;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace CustomerManagementApp.Services
@@ -6,14 +9,24 @@ namespace CustomerManagementApp.Services
     public class CustomerService
     {
         private readonly HttpClient _httpClient;
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly ILocalStorageService _localStorageService;
 
-        public CustomerService(HttpClient httpClient)
+        public CustomerService(HttpClient httpClient,
+                               AuthenticationStateProvider authenticationStateProvider,
+                               ILocalStorageService localStorageService)
         {
             _httpClient = httpClient;
+            _authenticationStateProvider = authenticationStateProvider;
+            _localStorageService = localStorageService;
         }
 
         public async Task<ServiceResponse> GetAllAsync(int pageNumber, int pageSize)
         {
+            var result = await CanAccessToken();
+            if (!result)
+                return new ServiceResponse();
+
             var response = await _httpClient.GetAsync($"api/customer?pageNumber={pageNumber}&pageSize={pageSize}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<ServiceResponse>();
@@ -21,6 +34,10 @@ namespace CustomerManagementApp.Services
 
         public async Task<ViewCustomerModel?> CreateAsync(CreateCustomerModel customer)
         {
+            var result = await CanAccessToken();
+            if (!result)
+                return new ViewCustomerModel();
+
             var response = await _httpClient.PostAsJsonAsync("api/customer", customer);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<ViewCustomerModel>();
@@ -28,12 +45,20 @@ namespace CustomerManagementApp.Services
 
         public async Task<bool> UpdateAsync(Guid id, UpdateCustomerModel customer)
         {
+            var result = await CanAccessToken();
+            if (!result)
+                return result;
+
             var response = await _httpClient.PutAsJsonAsync($"api/customer/{id}", customer);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
+            var result = await CanAccessToken();
+            if (!result)
+                return result;
+
             var response = await _httpClient.DeleteAsync($"api/customer/{id}");
             return response.IsSuccessStatusCode;
         }
@@ -49,6 +74,21 @@ namespace CustomerManagementApp.Services
             {
                 return string.Empty;
             }
+        }
+
+        private async Task<bool> CanAccessToken()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            if (user.Identity?.IsAuthenticated == false)
+                return false;
+
+            var token = await _localStorageService.GetItemAsync<string>("token");
+            if (string.IsNullOrEmpty(token))
+                return false;
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return true;
         }
     }
 }
