@@ -4,7 +4,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorageService;
 
 <div class="page">
-    <MudDialogProvider />
+ 
     <MudThemeProvider />
     <MudPopoverProvider />
     @if (IsLoggedIn)
@@ -19,6 +19,7 @@
             </div>
             <article class="content px-4">
                 @Body
+                <MudDialogProvider />
             </article>
         </main>
     }

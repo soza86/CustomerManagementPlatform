@@ -24,14 +24,14 @@ namespace CustomerManagementApp.Pages
             {
                 { "Customer", new CreateCustomerModel() }
             };
-            var dialog = DialogService.Show<NewCustomerForm>("Add Customer", parameters, options);
+            var dialog = await DialogService.ShowAsync<NewCustomerForm>("Add Customer", parameters, options);
             var result = await dialog.Result;
 
             if (!result.Canceled)
             {
                 var newCustomer = result.Data as CreateCustomerModel;
                 await CustomerService.CreateAsync(newCustomer);
-                NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                NavigationManager.NavigateTo("/customers");
             }
             else
             {

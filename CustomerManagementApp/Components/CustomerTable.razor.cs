@@ -42,7 +42,7 @@ namespace CustomerManagementApp.Components
             {
                 { "Customer", GetCustomer(customer) }
             };
-            var dialog = DialogService.Show<EditCustomerForm>("Edit Customer", parameters, options);
+            var dialog = await DialogService.ShowAsync<EditCustomerForm>("Edit Customer", parameters, options);
             var result = await dialog.Result;
 
             if (!result.Canceled)
@@ -50,7 +50,7 @@ namespace CustomerManagementApp.Components
                 var editedCustomer = result.Data as UpdateCustomerModel;
                 var response = await CustomerService.UpdateAsync(editedCustomer.Id, editedCustomer);
                 if (response)
-                    NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                    NavigationManager.NavigateTo("/customers", forceLoad: true);
             }
             else
             {
