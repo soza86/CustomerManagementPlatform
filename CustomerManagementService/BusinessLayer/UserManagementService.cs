@@ -1,5 +1,7 @@
-﻿using CustomerManagementService.Models.Resources;
+﻿using CustomerManagementService.Models;
+using CustomerManagementService.Models.Resources;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,10 +12,13 @@ namespace CustomerManagementService.BusinessLayer
     public class UserManagementService : IUserManagementService
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IOptionsMonitor<JWTConfiguration> _jwtConfiguration;
 
-        public UserManagementService(UserManager<IdentityUser> userManager)
+        public UserManagementService(UserManager<IdentityUser> userManager, 
+                                     IOptionsMonitor<JWTConfiguration> jwtConfiguration)
         {
             _userManager = userManager;
+            _jwtConfiguration = jwtConfiguration;
         }
 
         public async Task<string> LoginUser(LoginModel model)
@@ -30,12 +35,12 @@ namespace CustomerManagementService.BusinessLayer
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ABCDEFGHIJLMNOPQRSTUVWXYZAWDRGYJIKLOPLK"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.CurrentValue.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "JwtAuthApi",
-                audience: "JwtAuthApi",
+                issuer: _jwtConfiguration.CurrentValue.ValidIssuer,
+                audience: _jwtConfiguration.CurrentValue.ValidAudience,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);

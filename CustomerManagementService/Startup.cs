@@ -1,7 +1,10 @@
 ﻿using CustomerManagementService.BusinessLayer;
 using CustomerManagementService.DataLayer;
+using CustomerManagementService.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -24,6 +27,10 @@ namespace CustomerManagementService
                             .AddEntityFrameworkStores<CustomerContext>()
                             .AddDefaultTokenProviders();
 
+            builder.Services.Configure<JWTConfiguration>(builder.Configuration.GetSection("JWTSettings"));
+            builder.Services.AddSingleton<IOptionsMonitor<JWTConfiguration>, OptionsMonitor<JWTConfiguration>>();
+            var jWTConfiguration = builder.Configuration.GetSection("JWTSettings").Get<JWTConfiguration>();
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "JwtBearer";
@@ -36,9 +43,9 @@ namespace CustomerManagementService
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "JwtAuthApi",
-                    ValidAudience = "JwtAuthApi",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ABCDEFGHIJLMNOPQRSTUVWXYZAWDRGYJIKLOPLK"))
+                    ValidIssuer = jWTConfiguration.ValidIssuer,
+                    ValidAudience = jWTConfiguration.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jWTConfiguration.SecretKey))
                 };
             });
 
