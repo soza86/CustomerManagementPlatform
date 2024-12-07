@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using CustomerManagementApp.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -23,13 +24,38 @@ namespace CustomerManagementApp.Services
 
         public async Task<ServiceResponse> GetAllAsync(int pageNumber, int pageSize)
         {
-            var result = await CanAccessToken();
-            if (!result)
-                return new ServiceResponse();
+            try
+            {
+                var canAccess = await CanAccessToken();
+                if (!canAccess)
+                    return new ServiceResponse
+                    {
+                        IsSuccess = false
+                    };
 
-            var response = await _httpClient.GetAsync($"api/customer?pageNumber={pageNumber}&pageSize={pageSize}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<ServiceResponse>();
+                var response = await _httpClient.GetAsync($"api/customer?pageNumber={pageNumber}&pageSize={pageSize}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ServiceResponse
+                    {
+                        IsSuccess = false,
+                        StatusCode = response.StatusCode
+                    };
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<ServiceResponse>();
+                result.StatusCode = response.StatusCode;
+                result.IsSuccess = response.IsSuccessStatusCode;
+                return result;
+            }
+            catch (Exception)
+            {
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    StatusCode = HttpStatusCode.Unauthorized
+                };
+            }           
         }
 
         public async Task<ViewCustomerModel?> CreateAsync(CreateCustomerModel customer)

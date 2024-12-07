@@ -74,4 +74,10 @@ main {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
+
+    .article-login {
+        margin-top: 200px;
+        padding-left: 20rem !important;
+        padding-right: 20rem !important;
+    }
 }

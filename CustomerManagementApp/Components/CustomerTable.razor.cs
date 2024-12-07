@@ -1,4 +1,5 @@
-﻿using CustomerManagementApp.Models;
+﻿using Blazored.LocalStorage;
+using CustomerManagementApp.Models;
 using CustomerManagementApp.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -16,6 +17,9 @@ namespace CustomerManagementApp.Components
         [Inject]
         NavigationManager? NavigationManager { get; set; }
 
+        [Inject]
+        ILocalStorageService LocalStorageService { get; set; }
+
         private IEnumerable<ViewCustomerModel> _items = [];
 
         private async Task<TableData<ViewCustomerModel>> GetCustomers(TableState state, CancellationToken cancellationToken)
@@ -32,6 +36,11 @@ namespace CustomerManagementApp.Components
         private async Task<(IEnumerable<ViewCustomerModel> Items, int TotalItems)> FetchDataAsync(int pageNumber, int pageSize)
         {
             var response = await CustomerService.GetAllAsync(pageNumber + 1, pageSize);
+            if (!response.IsSuccess && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                await LocalStorageService.RemoveItemAsync("token");;
+                NavigationManager.NavigateTo("/login");
+            }
             return (response.Customers, response.TotalItems);
         }
 

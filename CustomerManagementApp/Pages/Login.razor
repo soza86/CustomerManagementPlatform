@@ -1,7 +1,6 @@
 ﻿@page "/login"
 
 <MudPaper Class="d-flex flex-column align-center justify-center pa-8" Elevation="8">
-    <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
     <MudForm @ref="_form" @bind-IsValid="_isFormValid" Class="w-100" ValidationDelay="300">
         <MudTextField @bind-Value="LoginModel.Username" Label="Username" Required="true" Class="mb-4" />
         <MudTextField @bind-Value="LoginModel.Password" Label="Password" InputType="InputType.Password" Required="true" Class="mb-4" />

@@ -4,7 +4,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorageService;
 
 <div class="page">
- 
+
     <MudThemeProvider />
     <MudPopoverProvider />
     @if (IsLoggedIn)
@@ -15,7 +15,7 @@
 
         <main>
             <div class="top-row px-4">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Logout">Logout</MudButton>
             </div>
             <article class="content px-4">
                 @Body
@@ -26,7 +26,7 @@
     else
     {
         <main>
-            <article class="content px-4">
+            <article class="article-login px-4">
                 <Login></Login>
             </article>
         </main>
@@ -48,5 +48,11 @@
         {
             NavigationManager.NavigateTo("/login");
         }
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorageService.RemoveItemAsync("token");
+        NavigationManager.NavigateTo("/login", forceLoad: true);
     }
 }
